@@ -2,8 +2,10 @@
 Module 2: Assignment - Encrypt/Decrypt Demo
 Gabriel Abney
 This program asks the user to select an encryption type,
-then prompts user input for a phrase to be encrypted.
-The program will 
+then prompts user input for a phrase to be encrypted or decrypted.
+The symmetric encryption option generates a single key to use for both
+encryption and decryption.  The asymmetric option generates a public
+key for encryption and a private key for decryption.
 
 Please note: This program uses the 'cryptography' and 'rsa' libraries
 that can be installed to a system running python using the commands 
@@ -70,7 +72,7 @@ while True:
                 print(f"Your encrypted message is: {altered_message}")
             elif what_do == "decrypt":
                 original_message = input("Type your encrypted message to decrypt using your private key: ")
-                altered_message = rsa.decrypt(original_message, private_key).decode() #decrypts message using sym_key
+                altered_message = rsa.decrypt(original_message, private_key).decode() #decrypts message using private_key
                 print(f"Your decrypted message is: {altered_message}")
             elif what_do == "exit":
                 break   #exits loop
