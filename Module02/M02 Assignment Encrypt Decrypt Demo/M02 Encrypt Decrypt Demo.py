@@ -47,11 +47,11 @@ while True:
             if what_do == "encrypt":
                 original_message = input("Type a plaintext message to encrypt: ")
                 altered_message = fernet.encrypt(original_message.encode()) #encrypts message using sym_key
-                print(f"Your encrypted message is: {altered_message}")
+                print(f"Your encrypted message is: {altered_message.decode()}")
             elif what_do == "decrypt":
                 original_message = input("Type your encrypted message to decrypt: ")
-                altered_message = fernet.decrypt(original_message).decode() #decrypts message using sym_key
-                print(f"Your decrypted message is: {altered_message}")
+                altered_message = fernet.decrypt(original_message) #decrypts message using sym_key
+                print(f"Your decrypted message is: {altered_message.decode()}")
             elif what_do == "exit":
                 break   #exits loop
             else:
@@ -59,7 +59,7 @@ while True:
 
     #asymmetric encryption code
     elif encrypt_type == 'a':
-        public_key, private_key = rsa.newkeys(128) #generates the public key and private key using a 128 bit key length
+        public_key, private_key = rsa.newkeys(512) #generates the public key and private key
         print("Asymmetric encryption selected.")
         print(f"Your public key: {public_key}")
         print(f"Your private key: {private_key}")
@@ -71,9 +71,9 @@ while True:
                 altered_message = rsa.encrypt(original_message.encode(), public_key) #encrypts message using public key
                 print(f"Your encrypted message is: {altered_message}")
             elif what_do == "decrypt":
-                original_message = input("Type your encrypted message to decrypt using your private key: ")
-                altered_message = rsa.decrypt(original_message, private_key).decode() #decrypts message using private_key
-                print(f"Your decrypted message is: {altered_message}")
+                original_message = altered_message #using altered message from earlier emcryption, as copy-pasting encoded message gives errors
+                altered_message = rsa.decrypt(original_message, private_key) #decrypts message using private_key
+                print(f"Your decrypted message is: {altered_message.decode()}")
             elif what_do == "exit":
                 break   #exits loop
             else:
