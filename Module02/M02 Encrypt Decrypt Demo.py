@@ -25,34 +25,58 @@ original_message = "" #user message to encrypt/decrypt
 altered_message = "" #user message after encryption/decryption
 sym_key = "" #stores the encryption key for symmetric encryption
 what_do = "" #action to do in loop
+public_key = "" #stores the public key for asymmetric encryption
+private_key = "" #stores the private key for asymmetric encryption
 
 #main loop of program
 while True:
     print("Welcome to ACME encryption!")
     encrypt_type = input("Please type 's' for symmetric encryption or 'a' for asymmetric encryption: ")
 
+    #symmetric encryption code
     if encrypt_type == 's':
         sym_key = Fernet.generate_key() #generates a random key using Fernet
-        fernet = Fernet(sym_key)
+        fernet = Fernet(sym_key) #creates Fernet instance using key
         print("Symmetric encryption selected.")
         print(f"Your encryption key: {sym_key}")
+        #loop to hande encryption and decryption processs
         while True:
-            what_do = input("Please select 'decrypt' or 'encrypt' or type 'exit': ")
+            what_do = input("Please select 'decrypt' or 'encrypt' or type 'exit': ") #asks user to choose to encrypt or decrypt
             if what_do == "encrypt":
                 original_message = input("Type a plaintext message to encrypt: ")
-                altered_message = fernet.encrypt(original_message.encode())
+                altered_message = fernet.encrypt(original_message.encode()) #encrypts message using sym_key
                 print(f"Your encrypted message is: {altered_message}")
             elif what_do == "decrypt":
                 original_message = input("Type your encrypted message to decrypt: ")
-                altered_message = fernet.decrypt(original_message.encode())
+                altered_message = fernet.decrypt(original_message).decode() #decrypts message using sym_key
                 print(f"Your decrypted message is: {altered_message}")
             elif what_do == "exit":
-                break
+                break   #exits loop
             else:
-                print("Invalid input.  Try again.")
+                print("Invalid input.  Try again.") #error message
 
+    #asymmetric encryption code
     elif encrypt_type == 'a':
+        public_key, private_key = rsa.newkeys(128) #generates the public key and private key using a 128 bit key length
         print("Asymmetric encryption selected.")
-        original_message = input("Please type a message for encryption: ")
+        print(f"Your public key: {public_key}")
+        print(f"Your private key: {private_key}")
+        #loop to handle encryption and decryption process
+        while True:
+            what_do = input("Please select 'decrypt' or 'encrypt' or type 'exit': ") #asks user to choose to encrypt or decrypt
+            if what_do == "encrypt":
+                original_message = input("Type a plaintext message to encrypt using your public key: ")
+                altered_message = rsa.encrypt(original_message.encode(), public_key) #encrypts message using public key
+                print(f"Your encrypted message is: {altered_message}")
+            elif what_do == "decrypt":
+                original_message = input("Type your encrypted message to decrypt using your private key: ")
+                altered_message = rsa.decrypt(original_message, private_key).decode() #decrypts message using sym_key
+                print(f"Your decrypted message is: {altered_message}")
+            elif what_do == "exit":
+                break   #exits loop
+            else:
+                print("Invalid input.  Try again.") #error message
+
+    #error message if invalid input
     else:
         print("Invalid encryption type.  Try again.")
