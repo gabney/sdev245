@@ -25,6 +25,7 @@ https://pypi.org/project/cryptography/
 # imports libraries for use in program
 # please note that cryptography library must be first installed using PIP
 import hashlib # built in library for generating hashes
+from pathlib import Path # built in library for generating filepaths for interacting files outside script
 import cryptography # installed library for various cryptographic functions
 
 # variables to be used later on in the program
@@ -49,9 +50,11 @@ while True: # main program body loop
                 sha256_txt.update(txt_message) # passes txt_message bytestream to sha256_txt
                 txt_message_hash = sha256_txt.hexdigest() # converts the passed bytestream text to the final hashed format
                 print(f"Your hash value for your message is: {txt_message_hash}")
-                break
             elif message_type == "file":
-                break
+                file_message = input("Type your text message to store in secretmessage.txt and generate a SHA-256 Hash: ") # collects user text input to be written to secretmessage.txt file
+                base_dir = Path(__file__).parent # get current directory path for successfully generating file
+                file_path = base_dir / 'secretmessage.txt'
+                f = open(f"{file_path}", 'w')
             elif message_type == "q":
                 break
             else:
