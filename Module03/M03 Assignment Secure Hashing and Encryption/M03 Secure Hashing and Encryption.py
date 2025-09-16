@@ -53,8 +53,15 @@ while True: # main program body loop
             elif message_type == "file":
                 file_message = input("Type your text message to store in secretmessage.txt and generate a SHA-256 Hash: ") # collects user text input to be written to secretmessage.txt file
                 base_dir = Path(__file__).parent # get current directory path for successfully generating file
-                file_path = base_dir / 'secretmessage.txt'
-                f = open(f"{file_path}", 'w')
+                file_path = base_dir / 'secretmessage.txt' #prepares to add secretmessage.txt in current directory
+                f = open(f"{file_path}", 'w+') # opens secretmessage.txt in write+read mode, which will overwrite existing file or create a new file if it does not exist
+                f.write(file_message) # writes the inputted secret message to the file
+                sha256_file = hashlib.sha256() # initializes hashlib sha256 method with sha256_file as the working variable
+                secret_data = f.read().encode() # reads the message in the secretmessage file, then encodes it as bytes as secret_data
+                sha256_file.update(secret_data) # passes the encoded data to sha256_file
+                file_message_hash = sha256_file.hexdigest() #converts the bytecode to the final hashed format
+                print(f"Your hash value for your file is: {file_message_hash}")
+
             elif message_type == "q":
                 break
             else:
