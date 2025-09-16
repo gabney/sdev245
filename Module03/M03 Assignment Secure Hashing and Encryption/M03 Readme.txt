@@ -11,7 +11,7 @@ Further instructions for each section follow below:
 
 Main menu:
 Allows the user to navigate to specific processes of the program.  Valid inputs are 'sha' for navigating to the SHA-256 hashing process, \
-'sub' for navigating to the simple substitution cipher encrypt/decrypt process, and 'sign' for navigating to the data signing process. \
+'sub' for navigating to the simple substitution cipher encrypt/decrypt process, and 'sign' for navigating to the digital signing process. \
 
 SHA-256 hash generation process:
 The user will be prompted to choose either 'text' or 'file' depending on what they want to generate a hash for.  They user can also type \
@@ -29,5 +29,7 @@ characters is printed to the console for the user.  For decrypt, a similar proce
 encrypted message.  The ASCII ordinal codes are decremented by 10 to undo the prior encryption, and the resultig decrypted message is \
 printed to the console.
 
-Data signing process:
+Digital signing process:
+When selected, a private key and public key are generated.  The user can type 'sign' to input a message to sign using the private key, \
+type 'verify' to input a message to verify by using the public key, or 'keys' to display information about the generated keys.
 

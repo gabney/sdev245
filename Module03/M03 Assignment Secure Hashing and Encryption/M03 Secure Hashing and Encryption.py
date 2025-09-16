@@ -26,7 +26,10 @@ https://pypi.org/project/cryptography/
 # please note that cryptography library must be first installed using PIP
 import hashlib # built in library for generating hashes
 from pathlib import Path # built in library for generating filepaths for interacting files outside script
-import cryptography # installed library for various cryptographic functions
+from cryptography.hazmat.primitives.asymmetric import rsa # functions from installed cryptography library
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
 
 # placeholder variables to be used later on in the program
@@ -40,11 +43,16 @@ enc_dec = '' # string to control whether to encrypt or decrypt the message
 input_message = ''# string to store the user's method for substitution encryption/decryption
 encrypted_message = '' # string to store final message after subsititution encryption
 decrypted_message = '' # string to store final message after substitution decryption
+private_key_generated = False # Boolean to ensure private key generation is only run once
+private_key = '' # private key generated for digital signing
+public_key = '' # public key generated from private key for digital signing
+verification = False # will be flipped true if verification of signature is successful
+
 
 
 while True: # main program body loop
     print("Welcome to the ACME encryption program.")
-    what_do = input("Please type 'sha' for SHA-256 Hash Generation, 'sub' for simple substitution encryption, or 'sign' for digital certificate signing: ")
+    what_do = input("Please type 'sha' for SHA-256 Hash Generation, 'sub' for simple substitution encryption, or 'sign' for digital signing: ")
     
 
     if what_do == "sha": # SHA-256 hash generation
@@ -95,7 +103,7 @@ while True: # main program body loop
                 for character in input_message: # iterates through each character in input_message
                     new_character = chr(ord(character) - 10) # converts the character to ascii value, decrements that value by 10, then converts back to ascii character
                     decrypted_message += new_character #adds each encrypted character to decrypted_message
-                print(f"Your encrypted message is {encrypted_message}") # prints decrypted message
+                print(f"Your decrypted message is {decrypted_message}") # prints decrypted message
                 
             elif enc_dec == 'q': #quits to main menu
                 break
@@ -105,7 +113,47 @@ while True: # main program body loop
 
 
     elif what_do == "sign":
-        pass
+        if private_key_generated == False: # runs only if keys have not been generated before
+            private_key_generated = True # flips Boolean to true
+            private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048,) # generates a private key
+            public_key = private_key.public_key() # generates a public key from the private key
+            with open("private_key.pem", "wb") as f: # saves the private key to a file
+                f.write(private_key.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.NoEncryption()))
+            with open("public_key.pem", "wb") as f: # saves the public key to a file
+                f.write(public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo))
+        
+        while True:
+            print("Digital signing process selected.")
+            what_do = input("Type 'sign' to digitally sign a message, 'verify' to verify a signature, 'keys' to print the private and public keys, or 'q' to quit to the main menu: ") # prompts user for input
+            
+            if what_do == "sign":
+                unsigned_message = input("Type the message would you like to sign: ").encode() # gets message to sign and encodes to bytestream
+                signature = private_key.sign(unsigned_message, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256()) # adds signature to unsigned_message using private key
+                with open("signature.bin", "wb") as f: # saves the signed message to file
+                    f.write(signature)
+            
+            elif what_do == "verify":
+                unchecked_message = input("Input the message to check against the signature: ").encode()
+                with open("public_key.pem", "rb") as f: # loads the public key from the saved file
+                    public_key = serialization.load_pem_public_key(f.read())
+                with open("signature.bin", "rb") as f: # loads the saved signed message to check against
+                    signature = f.read()
+                verification = public_key.verify(signature, unchecked_message, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256()) # saves Boolean of verification success or failure
+                if verification == True:
+                    print("Signature verified successfully.")
+                if verification == False:
+                    print("Signature verification failed.")
+
+            elif what_do == "keys":
+                print(f"Your private key is {private_key}")
+                print(f"Your public key is {public_key}")
+            
+            elif what_do == "q":
+                break
+            
+            else:
+                print("Invalid input. Try again.")
+
 
     else:
         print("Invalid input. Try again.")
