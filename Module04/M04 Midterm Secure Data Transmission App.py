@@ -22,6 +22,7 @@ documentation for the cryptography library here: https://pypi.org/project/crypto
 
 
 
+
 # Libraries/packages/modules imported for this program
 
 # Imports the Python3 built-in module for generating hashes
@@ -29,6 +30,7 @@ import hashlib
 
 # Imports the Fernet module from the external cryptography library for symmetric encryption
 from cryptography.fernet import Fernet
+
 
 
 
@@ -49,7 +51,7 @@ def hash_this(hash_what, file_name):
         f.write(digested_hash)
     
     # Prints confirmation message to console.
-    print(f"Hash saved to file {file_name}.txt")
+    print(f"Hash of message saved to file {file_name}.txt")
 
 
 # Function to generate an encrypted message using symmetric encryption with the cryptography module
@@ -59,16 +61,46 @@ def encrypt_this(encrypt_what):
     sym_key = Fernet.generate_key()
     # Creates Fernet instance using sym_key
     fernet = Fernet(sym_key)
-    # Writes key to file so it can be shared with the intended recipient
-    with open(f"encryption_key.txt", "w") as f:
-        f.write(sym_key)
+    # Decoes and writes key to file so it can be shared with the intended recipient
+    sym_decode = sym_key.decode()
+    with open("encryption_key.txt", "w") as f:
+        f.write(sym_decode)
+
+    # Prints message to console about encryption key location
+    print("Your symmetric encryption key is saved in 'encryption_key.txt'. Be careful to only share this with the intended recipient of the encrypted file!")
 
     # Uses the key to encrypt the passed message parameter
     encrypted_message = fernet.encrypt(encrypt_what)
-    # Writes the encrypted message to the console
+    # Writes the encrypted message to the encrypted_message.txt file to be shared
+    with open("encrypted_message.txt", "w") as f2:
+        f2.write(encrypted_message.decode())
 
-    # Prints message to console about encryption key location
-    print(f"Your symmetric encryption key is saved in 'encryption_key.txt'. Be careful to only share this with the intended recipient of the encrypted file!")
+    # Prints message to console about encrypted message location
+    print("Your encrypted message is saved in 'encryption_key.txt'. This can only be decrypted using the symmetric encryption key.\n")
+
+
+def decrypt_this():
+    """This function reads the saved encryption_key.txt and encrypted_message.txt files and returns the decrypted message."""
+    # Reads the encryption_key.txt file to find the symmetric key and encodes it for use in Fernet
+    with open("encryption_key.txt", "r") as f:
+        sym_decode = f.read()
+    sym_key = sym_decode.encode()
+    # Creates a Fernet instance using the symmetric key
+    fernet = Fernet(sym_key)
+    
+    # Reads the encrypted_message.txt file to extract the encrypted message
+    with open("encrypted_message.txt", "r") as f:
+        encrypted_message = f.read()
+
+    # Decrypts the message using the symmetric key
+    decrypted_message = fernet.decrypt(encrypted_message)
+    # Returns the decrypted message to the main body
+    return decrypted_message
+
+
+# Function to compare the value of the original hash and final hash to see if the messages are identical
+def hash_validation():
+    """This function reads the orginal_hash.txt and final_hash.txt files to compare their values.  Returns True or False."""
 
 
 
@@ -79,26 +111,49 @@ def error_input():
 
 
 
+
+
 # Main program loop
 while True:
     print("Welcome to the ACME secure data transmission program.")
     # Lets the user select between encryption and decryption processes
     what_do = input("Please type 'encrypt' to hash and ecrypt a message or 'decrypt' to decrypt a message and compare hash values: ")
 
+
     # Encryption and hashing processes
     if what_do == "encrypt":
+        print("Encryption and hashing process selected.")
         # Collects string input for plaintext secret message and encodes for processing
         secret_message = input("Please type your secret message: ").encode()
 
         # Generates a hash of the secret message and saves it to original_hash.txt
         hash_this(secret_message, "original_hash")
 
-        # Generates a 
+        # Generates an ecrypted version of the secret message, which is written to the file encrypted_message.txt
         encrypt_this(secret_message)
 
-    #
+
+    # Decryption and hash comparison process
     elif what_do == "decrypt":
-        pass
+        print("Decryption and hash validation selected.")
+
+        # Begins the decryption function, which requires encryption_key.txt and ecrypted_message.txt to be present in directory
+        decrypted_message = decrypt_this()
+        # Prints the decrypted message to the console
+        print(f"The decrypted message is: {decrypted_message.decode()}")
+
+        # Runs the hash generation function on the new decrypted message
+        hash_this(decrypted_message, "final_hash")
+
+        # Runs the hash validation function on original_hash.txt and final_hash.txt to see if they are identical
+        identical_hashes = hash_validation()
+
+        if identical_hashes == True:
+            print("The message hashes are identical. The secret message was transferred securely.")
+        else:
+            print("Sorry, the message hashes are not identical.")
+
+
     else:
         error_input()
     
