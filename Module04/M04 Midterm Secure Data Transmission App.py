@@ -9,10 +9,12 @@ If the user selects 'encrypt', the are prompted to input a secret message that t
 to encrypt.  An SHA-256 hash for the plaintext secret message is generated and written \
 to a file called "hash_original.txt". Then the secret message is encrypted using \
 symmetric enecryption and stored to a file called "encrypted_message.txt". The key for \
-encryption is saved in a file called "encryption_key.txt", printed to console with a \
-security warning, and then overwritten for security. \
-If the user selects 'decrypt', then 
-
+encryption is saved in a file called "encryption_key.txt" and a security warning is printed \
+to the console. 
+If the user selects 'decrypt', then the encryption_key.txt file is read alongside the \
+encrypted_message.txt file to decrypt the message.  This message is printed to console. \
+The hash of this final message is generated, and compared to the hash of the original \
+message.  The user is informed of whether they are identical or not.
 
 
 Please note:  This program uses the 'cryptography' library which must first be installed \
@@ -101,9 +103,20 @@ def decrypt_this():
 # Function to compare the value of the original hash and final hash to see if the messages are identical
 def hash_validation():
     """This function reads the orginal_hash.txt and final_hash.txt files to compare their values.  Returns True or False."""
+    # Extracts the hash of the original message
+    with open("original_hash.txt", "r") as f:
+        original_hash = f.read()
+    # Extracts the hash of the final message
+    with open("final_hash.txt", "r") as f2:
+        final_hash = f2.read()
 
-
-
+    #Checks to see if the original hash and final hash are identical, then returns True or False
+    if original_hash == final_hash:
+        return True
+    else:
+        return False
+    
+        
 # Function to print error message, to keep code tidy later
 def error_input():
     """This function prints an error message indicated the user inputted an invalid string."""
@@ -148,22 +161,14 @@ while True:
         # Runs the hash validation function on original_hash.txt and final_hash.txt to see if they are identical
         identical_hashes = hash_validation()
 
+        # Prints the result of the hash validation function to the user to let them know if the file was securely transferred
         if identical_hashes == True:
-            print("The message hashes are identical. The secret message was transferred securely.")
+            print("The message hashes are identical. The secret message was transferred securely.\n")
         else:
-            print("Sorry, the message hashes are not identical.")
+            print("Sorry, the message hashes are not identical.\n")
 
 
+    # Lets the user know if they typed a bad input
     else:
         error_input()
-    
 
-
-
-"""
-# debug, testing if fernet key is encoded
-sym_key = Fernet.generate_key()
-sym_key2 = sym_key.decode()
-print(sym_key)
-print(sym_key2)
-"""
