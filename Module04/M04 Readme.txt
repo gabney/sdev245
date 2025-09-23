@@ -41,3 +41,8 @@ this program generates a hash of the original message before encryption, as well
 encryption.  This lets a user know that the message that was passed along has not been tampered with.  For \
 availibility, this program does not require any online connection, only that it be run on a machine with \
 Python3 and the appropriate packages installed.  No outside user can remove access to the messages.
+
+This program displays entropy in that a new symmetric key is generated when the original encryption process is run. \
+Another user attempting to feed false information to the recipient would need identical user conditions to the original \
+computer to have the same seed for the encryption algorithm.  As long as the key is only accessed by the original user \
+and the final recipient, the chances of creating an identical hash by a malicious actor are infinitesimally small.
