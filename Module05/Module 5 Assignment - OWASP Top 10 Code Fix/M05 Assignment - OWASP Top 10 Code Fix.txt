@@ -141,8 +141,95 @@ app.get('/user', (req, res) => {
 
 app.get('/user', (req, res) => {
     // Directly trusting query parameters can lead to NoSQL injection
-    db.collection('users').findOne({ username: req.query.username }, (err, user) => {
+    let reqCleaned = sanitizeInputs(req) # sanitizes the user input before using it in database
+    let resCleaned = sanitizeInputs(res) # sanitizes the user input before using it in database
+    db.collection('users').findOne({ username: reqCleaned.query.username }, (err, user) => {
         if (err) throw err;
         res.json(user);
     });
 });
+
+
+
+
+"""
+7. Insecure Design
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    email = request.form['email']
+    new_password = request.form['new_password']
+    user = User.query.filter_by(email=email).first()
+    user.password = new_password
+    db.session.commit()
+    return 'Password reset'
+"""
+
+# 7. My proposed solution
+
+@app.route('/reset-password', methods=['POST'])
+
+def confirmation_email(email): # new function to send reset email to address
+    conf_address = email
+    confirmation.send(conf_address)
+def reset_password():
+    email = request.form['email']
+    user = User.query.filter_by(email=email).first()
+    confirmation_email(email) # passes email input to reset function
+    return 'Password reset instructions sent to email address'
+
+
+
+
+"""
+8.Software and Data Integrity Failures
+
+<script src="https://cdn.example.com/lib.js"></script>
+"""
+
+# 8. My proposed solution
+
+<script src="../scripts/lib.js"></script>
+
+
+
+"""
+9.Server-Side Request Forgery
+
+url = input("Enter URL: ")
+response = requests.get(url)
+print(response.text)
+"""
+
+# 9. My proposed solution
+
+url = input("Enter URL: ")
+def whitelist_checker(url):
+    url = noredirect(url) # prevents redirects and sanitizes input
+    if url in whitelists:   #checks if final url is in whitelist of acceptable urls
+        return = requests.get(url)
+    else:
+        return "unauthorized website"
+response = whitelist_checker(url)
+print(response.text)
+
+
+
+"""
+10. Identification and Authentication Failures
+
+if (inputPassword.equals(user.getPassword())) { 
+    // Login success
+}
+
+
+# 10. My proposed solution
+ 
+inputHash = inputPassword.hash()
+login_acceptable = login_attempts.check() # checks to see if too many logins recently
+if (inputHash.equals(user.getPasswordHash())) and login_acceptable = True {
+    // Login success
+}
+else:
+    print("Login failed.")
+login_attempts.record() # records this login attempt 

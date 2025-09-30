@@ -76,8 +76,71 @@ https://owasp.org/Top10/A03_2021-Injection/
 
 
 6. Injection
-Problem:
+Problem: 
+User inputs are accepted without validation/sanitization
 Solution:
+Use a sanitization method to clean the inputs before use in database
 Reason:
-
+Accepting user inputs without sanitization and validation can lead to errors or running hostile code.
 https://owasp.org/Top10/A03_2021-Injection/
+
+
+
+7. Insecure Design
+Problem:
+Any user can change any password in the database for any user using the form.
+Solution:
+Redesigned code to separate the posted form input from the ability to write to database.
+Instead, the form should send an email to a user with the email address, where they can 
+then reset their password.  This means that only users with access to the email can reset
+the associated password.
+Reason:
+Secure apps need to be designed with security in mind, not just implemented securely.  No matter
+how the code was implemented, this program would have allowed any user access to update data that
+should be secure within the database.  Password updates need to be only available to users with 
+appropriate access.
+https://owasp.org/Top10/A04_2021-Insecure_Design/
+
+
+
+8.Software and Data Integrity Failures
+Problem:
+Code uses script libraries sourced from a third party content delivery network.
+Solution:
+Save a local copy of the scripts to be run on the server, and have the source be internal
+directory rather than a third-party host.
+Reason:
+Using scripts sourced from a third party is risky, as the application has no way of determining
+the host of those scripts has been compromised.  Running third-party scripts can cause dangerous
+code to be run locally, potentially exposing the user's private data to exfiltration.
+https://cwe.mitre.org/data/definitions/830.html
+
+
+
+9.Server-Side Request Forgery
+Problem:
+Initial code snippets accepts any input URL and gets requests from that URL to return.
+Solution:
+My code sanitizes the inputted URL to prevent redirects and ensure valid format, and 
+additionally checks to see that the sanitized URL is in a whitelist of acceptable URLs 
+before running.
+Reason:
+When an external URL is needed as an input to handle some sort of process, that URL needs
+to match a basic format for acceptable IPV4/IPV6 address, with no redirects to other sites,
+and also that the final sanitized address matches a local whitelist of sites to interact with.
+https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
+
+
+
+10. Identification and Authentication Failures
+Problem:
+No checks on number of brute force login attempts.  Plaintext password is stored locally rather 
+than a hash to compare to hash of user inputted password.
+Solution:
+Inputted password is hashed and compared to a local hash value rather than a plaintext password being stored
+locally.  Additionally, number of login attempts is recorded, and login fails if too many recent attempts are
+recorded.  Response is generic failure rather than specific about what caused error.
+Reason:
+Per OWASP recommendations, plaintext passwords should never be stored locally or transmitted unencrypted.  
+Additionally, number of failed login attempts in a short time should be limited to prevent brute-force attacks.
+https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/
