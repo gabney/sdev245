@@ -27,7 +27,8 @@ app.get('/profile/:userId', (req, res) => {
 });
 """
 
-# 1 My proposed solution
+# 1. My proposed solution:
+
 app.get('/profile/:userId', (req, res) => {
     User.findById(req.params.userId, (err, user) => {
         if (err) return res.status(500).send(err);
@@ -46,3 +47,20 @@ def get_account(user_id):
     user = db.query(User).filter_by(id=user_id).first()
     return jsonify(user.to_dict())
 """
+
+# 2. My Proposed solution:
+
+@app.route('/account/<user_id>')
+def check_permissions(user_id, account_token) # gets the token about who is logged in for the request
+    if user_id == account_token:
+        return True # logged in account is same as requested user id
+    else:
+        return False # different account login from requested user id
+def get_account(user_id):
+    if check_permission() == True:
+        user = db.query(User).filter_by(id=user_id).first()
+        return jsonify(user.to_dict())
+    else return error_message_permissions
+
+
+
