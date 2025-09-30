@@ -64,3 +64,85 @@ def get_account(user_id):
 
 
 
+
+"""
+3. Cryptographic Failures
+
+public String hashPassword(String password) throws NoSuchAlgorithmException {
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    md.update(password.getBytes());
+    byte[] digest = md.digest();
+    return DatatypeConverter.printHexBinary(digest);
+}
+"""
+
+# 3. My proposed solution
+public String hashPassword(String password) throws NoSuchAlgorithmException {
+    MessageDigest md = MessageDigest.getInstance("AES"); # uses AES encryption algorithm
+    md.update(password.getBytes());
+    byte[] digest = md.digest();
+    return digest; # returns byte array without conversion
+
+
+
+
+"""
+4. Cryptographic Failures
+
+import hashlib
+
+def hash_password(password):
+    return hashlib.sha1(password.encode()).hexdigest()
+"""
+
+# 4. My proposed solution
+
+import hashlib
+
+def hash_password(password):
+    return hashlib.AES(password.encode()).hexdigest() # using AES encryption
+
+
+
+
+"""
+5. Injection
+
+String username = request.getParameter("username");
+String query = "SELECT * FROM users WHERE username = '" + username + "'";
+Statement stmt = connection.createStatement();
+ResultSet rs = stmt.executeQuery(query);
+"""
+
+# 5. My proposed solution
+
+String username = request.getParameter("username");
+String safeParams = "SELECT * FROM users WHERE username ="
+safeQuery = statementPreparer.create(safeParams, username) # creates a prepared statement to compile before executing, preparing to only accept one unknown parameter
+PreparedStatement stmt = connection.createPreparedStatement();
+ResultSet rs = stmt.executeQuery(safeQuery);
+
+
+
+
+"""
+6. Injection
+
+app.get('/user', (req, res) => {
+    // Directly trusting query parameters can lead to NoSQL injection
+    db.collection('users').findOne({ username: req.query.username }, (err, user) => {
+        if (err) throw err;
+        res.json(user);
+    });
+});
+"""
+
+# 6. My proposed solution
+
+app.get('/user', (req, res) => {
+    // Directly trusting query parameters can lead to NoSQL injection
+    db.collection('users').findOne({ username: req.query.username }, (err, user) => {
+        if (err) throw err;
+        res.json(user);
+    });
+});
