@@ -1,0 +1,48 @@
+"""
+Module 5: Assignment - OWASP Top 10 Code Fix
+SDEV 245
+Gabriel Abney
+
+This file includes my code from the Module 05 assignment \
+including the original vulnerable code in comments and my \
+proposed corrected code below.  The README file in the \
+GitHub folder containing this file includes the problem \
+that I identified for each code snippet as well as how my \
+proposed solution corrects those problems.
+
+This is a .txt file becaused multiple programming languages are \
+included in the code snippets.
+"""
+
+
+
+"""
+1. Broken Access Control
+
+app.get('/profile/:userId', (req, res) => {
+    User.findById(req.params.userId, (err, user) => {
+        if (err) return res.status(500).send(err);
+        res.json(user);
+    });
+});
+"""
+
+# 1 My proposed solution
+app.get('/profile/:userId', (req, res) => {
+    User.findById(req.params.userId, (err, user) => {
+        if (err) return res.status(500).send(err);
+        else res.json(user);  # moved into else statement instead of always passing the user .json data back 
+    });
+});
+
+
+
+
+"""
+2. Broken Access Control
+
+@app.route('/account/<user_id>')
+def get_account(user_id):
+    user = db.query(User).filter_by(id=user_id).first()
+    return jsonify(user.to_dict())
+"""
