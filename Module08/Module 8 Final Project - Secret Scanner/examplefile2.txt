@@ -1,6 +1,14 @@
 This is an example file!
 
 
+Testable fake google api keys that should meet the regex criteria:
+AIzaI1U7ketWJaq-oz6kmUV63DxRdlBeLO2YzJy
+AIzazpSloUPgJANILR3shOPjKkj8_fKGNiorXRC
+AIzanLruLqWdRYYlLK-KbPP7Ewf1sW9PLd22-YS
+AIzaiuD4kJyqasXb3-sONxcGF0Hv2C_6QPuWlWn
+AIzaDCb2I4DOGobQeYGn4l0cJjeVgs35XjntC1m
+AIzaxy0s3jiDkG5bP2zk6sgyjFn-IbNr4Wle7N2
+
 Garbage lines:
 foo
 bar
@@ -15,6 +23,13 @@ bar
 foo
 bar
 
+Testable fake mailchimp access tokens that should meet the regex criteria:
+148550db425a330971e868257a1af223-us31
+d6ec56d9403a697f0e5998c0bb930c7b-us47
+7a21476152c4469439158664e394be23-us9
+1f8e767470edd73e2d2f9fee30deb90d-us2
+8d9c52649b2f0b6648d056e05d4f194f-us42
+ce7d7d69da925ec75388f6af1d598bd4-us66
 
 Testable fake twitter tokens that should meet the regex criteria:
 5074906706810104253816-zU1NnitwwPiabzrTSAT4RZZIR3uQWXRWjQPHIVSz
@@ -23,3 +38,18 @@ Testable fake twitter tokens that should meet the regex criteria:
 712506238144902457764025566678164675892018471-J7gjYGKv8RKK8jRoyZ6oLhYFKqgPkKisg3sEBsvC
 79391218666844552305338308347620408567732930285620947265672814677839342832863222210443051854-PwB6Rlevbn10R88kP83tUtq9xbMys0ThbW8Ri6Kn
 299397893046634611099541487796371-9jmXCahTsZvD65L98Ip14BzOivFAj3Vl4efzS2VG
+
+Testable fake facebook access tokens that should meet the regex criteria:
+EAACEdEose0cBAwYL4eCIiLLkFyDGNyCa5VxxdmCEtmEgwjz8jCCWMXSyhQIDncJCWhbnFuuJEWgMSGDYLRgcmBW3WM0HV
+EAACEdEose0cBAbBgJBKwDGAEyZ6LsbBCY7pyq8cbJRivWxjFMPbDgOnrZBXkVzxN7bSjTQDzbHfuF
+EAACEdEose0cBAy5UIdik51PrF4BttyEaDcoV31WOnXAvc6tWBGTyI9z2YyRvjPmwBPup1bh85U9eNRZstzKfwsSKgEotrZxyWpkhBdtZMF
+EAACEdEose0cBA4jQE0
+
+
+Testable fake stripe api keys that should meet the regex criteria:
+sk_live_stZzpBpwuiIGuiFoD28UezWA
+sk_live_y1Ej08euGtDCYFsiMvpf2QxH
+sk_live_lxiKHEPtnaHl4NaKOpNGqgAs
+sk_live_VOKEopjv1EicIykKu6WZcaZM
+sk_live_WQCCtDqR4g49udWWXzltqrJN
+sk_live_X0DUuNO3ujzEO0TI5GuqzTNb
