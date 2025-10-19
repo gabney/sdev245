@@ -24,10 +24,12 @@ parser = argparse.ArgumentParser(description="Argument parser for SDEV 245 Final
 
 # Arguments for argparse parse object
 # example mandatory argument
-parser.add_argument("name", help="The name of the user.")
+#parser.add_argument("name", help="The name of the user.")
 # example optional argument
-parser.add_argument("--greet", action="store_true", help="Include a greeting.") 
+#parser.add_argument("--greet", action="store_true", help="Include a greeting.") 
 
+parser.add_argument("searchtype", help="The type of search to conduct - file or directory")
+parser.add_argument("searchloc", help="The location of search to conduct")
 
 # Parses created arguments
 args = parser.parse_args() 
