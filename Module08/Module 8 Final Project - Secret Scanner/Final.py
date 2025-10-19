@@ -4,10 +4,10 @@ SDEV 245 Security and Secure Coding
 Gabriel Abney
 
 This program allows the user to search for common
-regex patterns such as passwords within a specified file 
+regex patterns such as API tokens within a specified file 
 or folder.  The interface is a CLI created with argparse.
-The results of the search are stored in a log file in the 
-same directory as the program.
+The results of the search are stored in a log file called 
+scanresults.txt in the same directory as the program.
 """
 
 
@@ -18,7 +18,7 @@ import argparse
 # Regular Expressions package used to handle regular expressions for searching text
 import re
 # Pathlib module for handling file and directory paths
-from pathlib import Path
+import pathlib
 
 
 
@@ -55,25 +55,33 @@ log_file = "scanresults.txt"
 # Functions
 
 def scan(file_name):
-    """Scans a file that is passed for regex patterns and logs matches"""
+    """Scans a file that is passed for regex patterns and logs matches."""
     with open(log_file, "a+") as log, open(file_name, "r") as f:
-        log.write(f"Scan results for {file_name}:")
-        for t in tokens:
+        log.write(f"Scan results for {file_name}:\n")
+        for t in tokens: # iterates through all tokens in the dictionary
             pattern = re.compile(tokens[t]) # sets regex search pattern for app
-
-
+            for line_index, line_text in enumerate(f): # makes an iterable object of line number and the line text string
+                for match in re.finditer(pattern, line_text): # finds matching instances of the pattern and line text
+                    log.write(f"Found {t} with value '{match.group()}' at line {line_index + 1}.\n")
 
 
 def file_search(file_name):
     """Searches for a file in the local directory.  Must be passed a file name (including extension e.g. .txt) as parameter."""
-    if Path.is_file(Path(file_name)): #checks to see if file exists before searching
-        scan(file_name) # runs scan function
+    if pathlib.Path.is_file(pathlib.Path(file_name)): #checks to see if file exists before searching
+        scan(file_name) # passes file to scan function
         print(f"Scanned {file_name}. See results in {log_file}.") # prints confirmation to console
     else:
-        print("Error. File does not exist.") # error message if file does not exist
+        print(f"Error, file {file_name} does not exist.") # error message if file does not exist
 
-def dir_search():
-    pass
+
+def dir_search(dir_name):
+    """Searches for a specified directory. If exists, populates a list of all files to sequentially pass to file_search() function."""
+    if pathlib.Path.is_dir(pathlib.Path(dir_name)): #checks to see if directory exists before searching
+        for item in pathlib.Path(dir_name).rglob("*"): # recursive globs to find all subdirectories and files in given directory
+            if item.is_file():  # checks to see if identified item is a file
+                file_search(item)  # passes file to file_search function
+    else:
+        print(f"Error, {dir_name} is not a valid directory.") # error message if file does not exist
     
 
 
@@ -82,6 +90,6 @@ def dir_search():
 if args.search_type == "file": # leads to file search
     file_search(args.search_loc)
 elif args.search_type == "directory": # leads to directory search
-    pass
+    dir_search(args.search_loc)
 else: # error if invalid search type
     print("Error. Valid search types are 'file' or 'directory'.")
