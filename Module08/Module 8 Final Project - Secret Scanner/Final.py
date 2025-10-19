@@ -36,7 +36,7 @@ args = parser.parse_args()
 
 # Regex setup
 
-# dictionary of common app tokens and their regex patterns from https://github.com/odomojuli/regextokensas
+# dictionary of common app tokens and their regex patterns from https://github.com/odomojuli/regextokens
 tokens = {
     "Twitter Token": "[1-9][0-9]+-[0-9a-zA-Z]{40}",
     "Google API Key": "AIza[0-9A-Za-z-_]{35}",
