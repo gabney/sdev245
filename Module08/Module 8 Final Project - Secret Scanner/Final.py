@@ -12,11 +12,22 @@ same directory as the program.
 
 # Package Imports
 
-# Argparse package is used to make Command-Line-Interfaces (CLIs)
+# Argparse package used to make Command-Line-Interfaces (CLIs) with better functionality
 import argparse 
 
+# Regular Expressions package used to handle regular expressions for searching text
 import re
 
-#todo 
-#argparse searchtype searchlocation searchwhat
 
+# Creates the ArgumentParser object for argparse
+parser = argparse.ArgumentParser(description="Argument parser for SDEV 245 Final Project") 
+
+# Arguments for argparse parse object
+# example mandatory argument
+parser.add_argument("name", help="The name of the user.")
+# example optional argument
+parser.add_argument("--greet", action="store_true", help="Include a greeting.") 
+
+
+# Parses created arguments
+args = parser.parse_args() 
