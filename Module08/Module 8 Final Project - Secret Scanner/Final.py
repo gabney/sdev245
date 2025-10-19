@@ -22,14 +22,18 @@ import re
 # Creates the ArgumentParser object for argparse
 parser = argparse.ArgumentParser(description="Argument parser for SDEV 245 Final Project") 
 
-# Arguments for argparse parse object
-# example mandatory argument
-#parser.add_argument("name", help="The name of the user.")
-# example optional argument
-#parser.add_argument("--greet", action="store_true", help="Include a greeting.") 
-
 parser.add_argument("searchtype", help="The type of search to conduct - file or directory")
-parser.add_argument("searchloc", help="The location of search to conduct")
+parser.add_argument("searchloc", help="The location file or directory to search")
+
 
 # Parses created arguments
-args = parser.parse_args() 
+args = parser.parse_args()
+
+# regex tokens for common apps from https://github.com/odomojuli/regextokens
+twitter_token = "[1-9][0-9]+-[0-9a-zA-Z]{40}"
+google_API = "AIza[0-9A-Za-z-_]{35}"
+facebook_token = "EAACEdEose0cBA[0-9A-Za-z]+"
+stripe_standard_API = "sk_live_[0-9a-zA-Z]{24}"
+mailchimp_token = "[0-9a-f]{32}-us[0-9]{1,2}"
+
+with open 
