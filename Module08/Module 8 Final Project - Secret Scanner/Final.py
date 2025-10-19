@@ -58,13 +58,10 @@ def scan(file_name):
     with open(log_file, "a+") as log:
         log.write(f"Scan results for {file_name}:\n")
         for t in tokens: # iterates through all tokens in the dictionary
-            print("count")
             pattern = re.compile(tokens[t]) # sets regex search pattern for app
-            print(tokens[t])
             with open(file_name, "r") as f:
                 for line_index, line_text in enumerate(f): # makes an iterable object of line number and the line text string
                     for match in re.finditer(pattern, line_text): # finds matching instances of the pattern and line text
-                        print(line_text)
                         log.write(f"Found {t} with value '{match.group()}' at line {line_index + 1}.\n")
 
 
